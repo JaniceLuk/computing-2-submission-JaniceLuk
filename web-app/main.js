@@ -7,6 +7,7 @@ const statusElement = document.querySelector('#status');
 const historyElement = document.querySelector('#history');
 const capturedElement = document.querySelector('#captured');
 const resetButton = document.querySelector('#reset');
+const gameOverElement = document.querySelector('#game-over');
 
 function renderBoard() {
   boardElement.innerHTML = '';
@@ -20,6 +21,9 @@ function renderBoard() {
       cell.dataset.square = square;
       cell.setAttribute('aria-label', piece ? `${piece.colour} ${piece.type} on ${square}` : `empty ${square}`);
       if (game.selected === square) cell.classList.add('selected');
+      if (piece?.type === 'king' && piece.colour === game.turn && isInCheck(game, game.turn)) {
+        cell.classList.add(game.status === 'checkmate' ? 'checkmate' : 'check');
+      }
       if (legalMoves.includes(square)) cell.classList.add(piece ? 'capture-hint' : 'move-hint');
       if (piece) {
         const img = document.createElement('img');
@@ -28,6 +32,7 @@ function renderBoard() {
         img.className = 'piece';
         cell.appendChild(img);
       }
+      cell.disabled = isGameFinished();
       cell.addEventListener('click', () => handleSquareClick(square));
       boardElement.appendChild(cell);
     }
@@ -44,6 +49,12 @@ function renderSidebar() {
       : `${turn} to move${checkText}`;
   historyElement.innerHTML = game.history.map((entry, index) => `<li>${index + 1}. ${entry}</li>`).join('');
   capturedElement.textContent = game.captured.map(pieceSymbol).join(' ');
+  if (game.status === 'checkmate' || game.status === 'gameover') {
+    gameOverElement.textContent = `Game over. ${game.winner} wins!`;
+    gameOverElement.classList.remove('hidden');
+  } else {
+    gameOverElement.classList.add('hidden');
+}
 }
 
 function render() {
@@ -51,7 +62,12 @@ function render() {
   renderSidebar();
 }
 
+function isGameFinished() {
+  return ['checkmate', 'stalemate', 'gameover'].includes(game.status);
+}
+
 function handleSquareClick(square) {
+  if (isGameFinished()) return;
   if (game.selected && legalMoves.includes(square)) {
     const result = movePiece(game, game.selected, square);
     game = result.game;

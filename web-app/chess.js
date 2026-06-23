@@ -214,7 +214,7 @@ function applyMoveToBoard(game, from, to, promotion = 'queen') {
 export function getLegalMoves(game, from) {
   if (!isValidSquare(from) || !game.board[from]) return [];
   const piece = game.board[from];
-  if (piece.colour !== game.turn || game.status !== 'playing') return [];
+  if (piece.colour !== game.turn || ['checkmate', 'stalemate', 'gameover'].includes(game.status)) return [];
   return Object.keys(game.board).filter(to => {
     if (!canPieceReach(game.board, from, to)) return false;
     const trial = cloneGame(game);
@@ -257,12 +257,66 @@ export function hasLegalMove(game, colour) {
  * @param {PieceType} [promotion='queen']
  * @returns {{ok: boolean, game: GameState, message: string}}
  */
+
 export function movePiece(game, from, to, promotion = 'queen') {
+  if (!isLegalMove(game, from, to)) return { ok: false, game, message: 'Illegal move.' };
+
+  const next = cloneGame(game);
+  const piece = next.board[from];
+  const captured = applyMoveToBoard(next, from, to, promotion);
+
+  if (captured) next.captured.push(captured);
+
+  next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
+  next.turn = other(next.turn);
+  next.selected = null;
+
+  const whiteKingMissing = !findKing(next, WHITE);
+  const blackKingMissing = !findKing(next, BLACK);
+
+  if (whiteKingMissing || blackKingMissing) {
+    next.status = 'gameover';
+    next.winner = whiteKingMissing ? BLACK : WHITE;
+    return { ok: true, game: next, message: 'Game over. King captured.' };
+  }
+
+  if (captured?.type === 'king') {
+    next.status = 'gameover';
+    next.winner = piece.colour;
+    return { ok: true, game: next, message: 'Game over. King captured.' };
+  }
+
+  const opponent = next.turn;
+
+  if (!hasLegalMove(next, opponent)) {
+    if (isInCheck(next, opponent)) {
+      next.status = 'checkmate';
+      next.winner = other(opponent);
+    } else {
+      next.status = 'stalemate';
+    }
+  } else if (isInCheck(next, opponent)) {
+    next.status = 'check';
+  } else {
+    next.status = 'playing';
+  }
+
+  return { ok: true, game: next, message: 'Move played.' };
+}
+
+/*export function movePiece(game, from, to, promotion = 'queen') {
   if (!isLegalMove(game, from, to)) return { ok: false, game, message: 'Illegal move.' };
   const next = cloneGame(game);
   const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
   if (captured) next.captured.push(captured);
+  if (captured?.type === 'king') {
+  next.status = 'gameover';
+  next.winner = piece.colour;
+  next.selected = null;
+  next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
+  return { ok: true, game: next, message: 'Game over. King captured.' };
+}
   next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
   next.turn = other(next.turn);
   next.selected = null;
@@ -282,6 +336,7 @@ export function movePiece(game, from, to, promotion = 'queen') {
   }
   return { ok: true, game: next, message: 'Move played.' };
 }
+*/
 
 /**
  * Selects a square in the game state. Selecting an own piece returns its legal moves.
@@ -291,6 +346,12 @@ export function movePiece(game, from, to, promotion = 'queen') {
  */
 export function selectSquare(game, square) {
   const next = cloneGame(game);
+
+  if (['checkmate', 'stalemate', 'gameover'].includes(next.status)) {
+    next.selected = null;
+    return { game: next, legalMoves: [] };
+  }
+
   const piece = next.board[square];
   next.selected = piece?.colour === next.turn ? square : null;
   return { game: next, legalMoves: next.selected ? getLegalMoves(next, next.selected) : [] };

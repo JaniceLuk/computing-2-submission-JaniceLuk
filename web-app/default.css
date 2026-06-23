@@ -73,6 +73,42 @@ main {
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
 }
 
+.check {
+  box-shadow: inset 0 0 0 5px rgba(255, 80, 80, 0.85);
+}
+
+.checkmate {
+  box-shadow: inset 0 0 0 5px rgba(180, 0, 0, 0.95);
+  animation: pulse-checkmate 0.8s infinite alternate;
+}
+
+.game-over {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes pulse-checkmate {
+  from {
+    filter: brightness(1);
+  }
+
+  to {
+    filter: brightness(0.75);
+  }
+}
+
 h1, h2 { margin-top: 0; }
 .status { font-weight: 700; }
 .reset-button {
