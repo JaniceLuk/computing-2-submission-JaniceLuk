@@ -5,9 +5,16 @@
  * @module chess
  */
 
+/** Chess board file letters from a to h. */
 export const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+
+/** Chess board rank numbers from 1 to 8. */
 export const RANKS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+/** White player identifier. */
 export const WHITE = 'white';
+
+/** Black player identifier. */
 export const BLACK = 'black';
 
 const PIECE_ORDER = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
@@ -16,10 +23,35 @@ const PIECE_SYMBOLS = {
   black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' },
 };
 
-/** @typedef {'white'|'black'} Colour */
-/** @typedef {'king'|'queen'|'rook'|'bishop'|'knight'|'pawn'} PieceType */
-/** @typedef {{type: PieceType, colour: Colour, hasMoved: boolean}} Piece */
-/** @typedef {{board: Object<string, Piece|null>, turn: Colour, selected: string|null, captured: Piece[], status: string, winner: Colour|null, history: string[]}} GameState */
+/**
+ * A player colour.
+ * @typedef {'white'|'black'} Colour
+ */
+
+/**
+ * A chess piece type.
+ * @typedef {'king'|'queen'|'rook'|'bishop'|'knight'|'pawn'} PieceType
+ */
+
+/**
+ * A chess piece on the board.
+ * @typedef {Object} Piece
+ * @property {PieceType} type - The type of chess piece.
+ * @property {Colour} colour - The colour that owns the piece.
+ * @property {boolean} hasMoved - Whether the piece has moved before.
+ */
+
+/**
+ * The complete state of a chess game.
+ * @typedef {Object} GameState
+ * @property {Object<string, Piece|null>} board - Board squares mapped to pieces or null.
+ * @property {Colour} turn - The colour whose turn it is.
+ * @property {string|null} selected - The currently selected square, or null.
+ * @property {Piece[]} captured - Pieces captured so far.
+ * @property {string} status - Current game status: playing, check, checkmate or stalemate.
+ * @property {Colour|null} winner - Winning colour, or null if there is no winner.
+ * @property {string[]} history - List of moves played.
+ */
 
 const clonePiece = piece => piece ? { ...piece } : null;
 const other = colour => colour === WHITE ? BLACK : WHITE;
