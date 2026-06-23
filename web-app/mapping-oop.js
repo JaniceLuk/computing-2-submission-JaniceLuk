@@ -16,10 +16,11 @@ class Square {
 }
 
 for (let i = 8; i > 0; i--) {
+
+    const isRowEven = i % 2 == 0 ? true : false;
     const rowArray = [];
     for (let j = 97; j < 105; j++) {
-        const fileName = String.
-        fromCharCode(j);
+        const fileName = String.fromCharCode(j);
         const id = fileName + i;
         // create object of squares
         const square = new Square();
@@ -27,8 +28,32 @@ for (let i = 8; i > 0; i--) {
         // set properties
         square.id = id;
 
+        // color
+        // odd row ==> odd element
+        if(!isRowEven && !isElementEven){
+            square.color = '#769656'
+        }
+
+        // even row ==> odd element
+        if(!isRowEven && !isElementEven){
+            square.color = '#EEEED2'
+        }
+
+        // odd row ==> even element
+        if(!isRowEven && !isElementEven){
+            square.color = '#EEEED2'
+        }
+
+        // even row ==> even element
+        if(!isRowEven && !isElementEven){
+            square.color = '#769656'
+        }
+
         // push array
         rowArray.push(square);
     }
     mainMap.push(rowArray);
 }
+
+import * as renderModule from './renderHTML.js';
+silicon.renderUI(mainMap);

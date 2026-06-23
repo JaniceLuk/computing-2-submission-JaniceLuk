@@ -51,3 +51,11 @@
     width: 70px;
     height: 70px;
 }
+
+.color-dark{
+    background-color: #769656;
+}
+
+.color-light{
+    background-color: #EEEED2;
+}
