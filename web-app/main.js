@@ -21,7 +21,14 @@ function renderBoard() {
       cell.setAttribute('aria-label', piece ? `${piece.colour} ${piece.type} on ${square}` : `empty ${square}`);
       if (game.selected === square) cell.classList.add('selected');
       if (legalMoves.includes(square)) cell.classList.add(piece ? 'capture-hint' : 'move-hint');
-      cell.textContent = pieceSymbol(piece);
+      // cell.textContent = pieceSymbol(piece);
+      if (piece) {
+        const img = document.createElement('img');
+        img.src = `pieces/${piece.colour}/${piece.type}.png`;
+        img.alt = `${piece.colour} ${piece.type}`;
+        img.className = 'piece';
+        cell.appendChild(img);
+      }
       cell.addEventListener('click', () => handleSquareClick(square));
       boardElement.appendChild(cell);
     }
