@@ -73,6 +73,21 @@ main {
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
 }
 
+.captured-side,
+.captured-row {
+  min-width: 80px;
+  min-height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.captured-piece {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .check {
   box-shadow: inset 0 0 0 5px rgba(255, 80, 80, 0.85);
 }

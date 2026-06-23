@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { createGame, getLegalMoves, movePiece, isInCheck, pieceSymbol } from '../chess.js';
+import { createGame, getLegalMoves, movePiece, isInCheck, pieceSymbol, isLegalMove } from '../chess.js';
 
 describe('Chess game module', () => {
   it('creates a standard board with 32 pieces and white to move', () => {
@@ -47,5 +47,27 @@ describe('Chess game module', () => {
 
   it('uses readable symbols for the UI', () => {
     assert.equal(pieceSymbol({ type: 'queen', colour: 'white', hasMoved: false }), '♕');
+  });
+
+  it('prevents any piece from capturing a king directly', () => {
+    const game = createGame();
+
+    // Clear the board
+    for (const square of Object.keys(game.board)) {
+      game.board[square] = null;
+    }
+
+    // Put kings on the board and a white queen next to the black king
+    game.board.e1 = { type: 'king', colour: 'white', hasMoved: false };
+    game.board.e8 = { type: 'king', colour: 'black', hasMoved: false };
+    game.board.e7 = { type: 'queen', colour: 'white', hasMoved: false };
+    game.turn = 'white';
+
+    assert.equal(isLegalMove(game, 'e7', 'e8'), false);
+
+    const result = movePiece(game, 'e7', 'e8');
+    assert.equal(result.ok, false);
+    assert.equal(result.message, 'Illegal move.');
+    assert.equal(result.game.board.e8.type, 'king');
   });
 });

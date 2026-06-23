@@ -123,8 +123,12 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
   if (!isValidSquare(from) || !isValidSquare(to) || from === to) return false;
   const piece = board[from];
   if (!piece) return false;
+
   const target = board[to];
   if (target && target.colour === piece.colour) return false;
+
+  // Kings cannot be captured
+  if (target?.type === 'king') return false;
 
   const df = fileIndex(to) - fileIndex(from);
   const dr = rankNumber(to) - rankNumber(from);
@@ -260,52 +264,6 @@ export function hasLegalMove(game, colour) {
 
 export function movePiece(game, from, to, promotion = 'queen') {
   if (!isLegalMove(game, from, to)) return { ok: false, game, message: 'Illegal move.' };
-
-  const next = cloneGame(game);
-  const piece = next.board[from];
-  const captured = applyMoveToBoard(next, from, to, promotion);
-
-  if (captured) next.captured.push(captured);
-
-  next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
-  next.turn = other(next.turn);
-  next.selected = null;
-
-  const whiteKingMissing = !findKing(next, WHITE);
-  const blackKingMissing = !findKing(next, BLACK);
-
-  if (whiteKingMissing || blackKingMissing) {
-    next.status = 'gameover';
-    next.winner = whiteKingMissing ? BLACK : WHITE;
-    return { ok: true, game: next, message: 'Game over. King captured.' };
-  }
-
-  if (captured?.type === 'king') {
-    next.status = 'gameover';
-    next.winner = piece.colour;
-    return { ok: true, game: next, message: 'Game over. King captured.' };
-  }
-
-  const opponent = next.turn;
-
-  if (!hasLegalMove(next, opponent)) {
-    if (isInCheck(next, opponent)) {
-      next.status = 'checkmate';
-      next.winner = other(opponent);
-    } else {
-      next.status = 'stalemate';
-    }
-  } else if (isInCheck(next, opponent)) {
-    next.status = 'check';
-  } else {
-    next.status = 'playing';
-  }
-
-  return { ok: true, game: next, message: 'Move played.' };
-}
-
-/*export function movePiece(game, from, to, promotion = 'queen') {
-  if (!isLegalMove(game, from, to)) return { ok: false, game, message: 'Illegal move.' };
   const next = cloneGame(game);
   const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
@@ -336,7 +294,7 @@ export function movePiece(game, from, to, promotion = 'queen') {
   }
   return { ok: true, game: next, message: 'Move played.' };
 }
-*/
+
 
 /**
  * Selects a square in the game state. Selecting an own piece returns its legal moves.

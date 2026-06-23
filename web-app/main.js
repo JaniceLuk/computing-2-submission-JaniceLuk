@@ -60,6 +60,30 @@ function renderSidebar() {
 function render() {
   renderBoard();
   renderSidebar();
+  renderCapturedPieces();
+}
+
+function renderCapturedPieces() {
+  const whiteCaptured = document.getElementById('captured-white');
+  const blackCaptured = document.getElementById('captured-black');
+
+  if (!whiteCaptured || !blackCaptured) return;
+
+  whiteCaptured.innerHTML = '';
+  blackCaptured.innerHTML = '';
+
+  game.captured.forEach(piece => {
+    const img = document.createElement('img');
+    img.src = `pieces/${piece.colour}/${piece.type}.png`;
+    img.alt = `${piece.colour} ${piece.type}`;
+    img.className = 'captured-piece';
+
+    if (piece.colour === 'white') {
+      whiteCaptured.appendChild(img);
+    } else {
+      blackCaptured.appendChild(img);
+    }
+  });
 }
 
 function isGameFinished() {
