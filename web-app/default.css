@@ -20,11 +20,28 @@ body {
 }
 
 main {
-  display: flex;
+  display: grid;
+  grid-template-columns: 120px 560px 120px;
   justify-content: center;
-  padding-top: 40px;
+  align-items: start;
+  gap: 24px;
 }
 
+.captured-side {
+  width: 120px;
+  height: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.captured-piece {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
 .board {
   width: min(80vw, 560px);
   height: min(80vw, 560px);
@@ -71,21 +88,6 @@ main {
   border-radius: 10px;
   background: var(--panel);
   box-shadow: 0 8px 22px rgba(0, 0, 0, 0.10);
-}
-
-.captured-side,
-.captured-row {
-  min-width: 80px;
-  min-height: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.captured-piece {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
 }
 
 .check {
