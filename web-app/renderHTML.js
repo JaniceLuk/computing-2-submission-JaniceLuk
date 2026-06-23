@@ -13,11 +13,11 @@ const renderUI = function(squares){
     squares.forEach(element => {
         // rank is row and we have 8 ranks
         let rank = document createElement("div");
-        rank.classList.add('rank-style');
-        rank.setAttribute('id', rankNumber--);
+        rank.classList.add("rank-style");
+        rank.setAttribute("rank", rankNumber--);
 
         // ------------------------
-        element.forEach(el => {
+        element.forEach((el => {
             el.isPiece = addPawnPieceToObject(el);
 
             // creating html element with javascript
@@ -28,6 +28,8 @@ const renderUI = function(squares){
             square.setAttribute("id", el.id);
             // add file class to each square
             square.classList.add("file-" + el.id[0]);
+
+            square.addEventListener("click", el.movement);
 
             const imgElement = document.createElement("img");
             if (el.isPiece) {

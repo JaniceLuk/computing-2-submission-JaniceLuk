@@ -1,5 +1,6 @@
 // importing square class from class folder
 import { Square } from "./square-class.js";
+import { addPiecesToObject } from "./pawn-function.js";
 
 const mainMap = [];
 
@@ -42,3 +43,11 @@ for (Let i = 8; i > 0; i--) {
     }
     mainMap.push(rowArray);
 }
+
+mainMap.forEach(function (insiderarray) {
+    insiderarray.forEach(function(obj){
+        addPiecesToObject(obj);
+    });
+});
+// addPiecesToObject(mainMap);
+export { mainMap };
