@@ -42,36 +42,47 @@ for(const i of arrayofPawn){
                 document.getElementById(currentId[0] + change));
         }
         // add circle to each elements of passed array
-        highlightCircle(addCircleToElements);
+        console.log(addCircleToElements);
+        highlightCircle(addCircleToElements, clickedElement);
     });
 }
 
-// array to track circles
-const trackCircleArray = [];
+// track in which squares we added circles
+const insertedCircle = [];
 
 // add circle to each element of passed array
-const highlightCircle = function (attachCircles) {
+const highlightCircle = function (attachCircles, clickedElement) {
+    // check the inserted circle
+    if(insertedCircle.length != 0) removeMyCircle(insertedCircle);
 
-    if(trackCircleArray.length != 0){
-        undoCircle(trackCircleArray);
+    // attach the created childs to parent
+    attachCircles.forEach((i) => {
+        // add class to square in which we want to add circle
+        i.classList.add("flex");
 
-    }
+        // movement here
+        i.addEventListener('click', function(){
+            i.innerHTML = clickedElement
+            const removeCircleFromThis = attachCircles.filter(el => el !== i);
+         //   console.log(removeCircleFromThis);
+            removeMyCircle(removeCircleFromThis);
+            clickedElement.innerHTML = "";
+        });
+        // add circle to square 
+        i.innerHTML = `<div class="circle"></div>`;
 
-    // create child element
-    const child = `<div class="circle"></div>`
-
-    attachCircles.forEach((el) => {
-        el.innerHTML = child;
-        el.classlist.add("flex");
-        trackCircleArray.push(el);
+        // add all element in array which we have inserted circles
+        insertedCircle.push(i);
     });
-    console.log(trackCircleArray);
-};
 
-// remove circles from elements
-const undoCircle = function(circlesArray){
-    circlesArray.forEach((cur)=>{
-        cur.innerHTML = "";
-        cur.classList.remove("circle");
-    });
-};
+    // Remove My Circle
+    const removeMyCircle = function (removalArray) {
+        removalArray.forEach((i) => {
+            i.innerHTML = "";
+            i.classList.remove("flex");
+
+        });
+    };
+
+    // remove circle from square
+
