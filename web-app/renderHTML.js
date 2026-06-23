@@ -1,5 +1,7 @@
 "use strict";
 
+import { addPawnPieceToObject } from "./pawn-function.js";
+
 // create a function that renders html using array that we provide
 const renderUI = function(squares){
 
@@ -9,24 +11,40 @@ const renderUI = function(squares){
     let rankNumber = 8;
     // create square of size 70 x 70
     squares.forEach(element => {
+        // rank is row and we have 8 ranks
         let rank = document createElement("div");
         rank.classList.add('rank-style');
         rank.setAttribute('id', rankNumber--);
-        mainContainer.appendChild(rank);
-        element.forEach(el =>{
+
+        // ------------------------
+        element.forEach(el => {
+            el.isPiece = addPawnPieceToObject(el);
+
+            // creating html element with javascript
             const square = document.createElement('div');
             square.classList.add(`color-${el.color}`);
-            square.classList.add('square-common');
-
+            square.classList.add("square-common");
             // assign unique id to eachsquare
             square.setAttribute("id", el.id);
-
             // add file class to each square
             square.classList.add("file-" + el.id[0]);
+
+            const imgElement = document.createElement("img");
+            if (el.isPiece) {
+                imgElement.setAttribute('src', el.isPiece);
+            }
+            square.appendChild(imgElement);
+
             rank.appendChild(square); 
         });
+
+        mainContainer.appendChild(rank);
+
     });
 }
 
-export {renderUI};
+import { mainMap } from "./initial-mapping.js";
+renderUI(mainMap);
+
+
 

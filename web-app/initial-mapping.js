@@ -1,21 +1,9 @@
-// chess square
-// propery -> 2 colours(color == white ? 0 : 1)(white = 0 && black = 1)
-// propery -> 2 isHighlighted(true or false)
-// propery -> 2 isHint(true or false)
-// propery -> 2 isPiece(true or false){
-}
-// propery -> 2 id(string) 
+// importing square class from class folder
+import { Square } from "./square-class.js";
 
 const mainMap = [];
-class Square {
-    color;
-    isHighlighted;
-    isHint;
-    isPiece;
-    id;
-}
 
-for (let i = 8; i > 0; i--) {
+for (Let i = 8; i > 0; i--) {
 
     const isRowEven = i % 2 == 0 ? true : false;
     const rowArray = [];
@@ -54,6 +42,3 @@ for (let i = 8; i > 0; i--) {
     }
     mainMap.push(rowArray);
 }
-
-import * as silicon from './renderHTML.js';
-silicon.renderUI(mainMap);
