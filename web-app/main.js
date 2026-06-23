@@ -8,6 +8,24 @@ const historyElement = document.querySelector('#history');
 const capturedElement = document.querySelector('#captured');
 const resetButton = document.querySelector('#reset');
 const gameOverElement = document.querySelector('#game-over');
+const messageArea = document.getElementById('message-area');
+
+function showMessage(text) {
+  messageArea.textContent = text;
+  messageArea.classList.remove('hidden');
+}
+
+function hideMessage() {
+  messageArea.classList.add('hidden');
+}
+
+function showCheckmateMessages() {
+  showMessage('Nice');
+
+  setTimeout(() => {
+    showMessage('Checkmate!');
+  }, 700);
+}
 
 function renderBoard() {
   boardElement.innerHTML = '';
@@ -93,11 +111,23 @@ function isGameFinished() {
 function handleSquareClick(square) {
   if (isGameFinished()) return;
   if (game.selected && legalMoves.includes(square)) {
-    const result = movePiece(game, game.selected, square);
-    game = result.game;
-    legalMoves = [];
-    render();
-    return;
+  const result = movePiece(game, game.selected, square);
+
+  if (!result.ok) return;
+
+  game = result.game;
+  legalMoves = [];
+  render();
+
+  if (game.status === 'checkmate') {
+    showCheckmateMessages();
+  } else if (game.status === 'check') {
+    showMessage('Check!');
+  } else {
+    hideMessage();
+  }
+
+  return;
   }
   const selection = selectSquare(game, square);
   game = selection.game;
@@ -109,6 +139,8 @@ resetButton.addEventListener('click', () => {
   game = createGame();
   legalMoves = [];
   render();
+  showMessage('White goes first!');
 });
 
 render();
+showMessage('White goes first!');

@@ -13,18 +13,40 @@ body {
   margin: 0;
   min-height: 100vh;
   display: flex;
-  justify-content: center; /* horizontal */
-  align-items: center;     /* vertical */
+  justify-content: center;
+  align-items: center;
   font-family: Arial, Helvetica, sans-serif;
   background: white;
 }
 
 main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(-40px);
+}
+
+#reset {
+  margin-bottom: 10px;
+
+  padding: 12px 24px;
+  background: #18A6AD;
+  color: white;
+
+  border: none;
+  border-radius: 20px;
+
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.game-layout {
   display: grid;
   grid-template-columns: 120px 560px 120px;
-  justify-content: center;
-  align-items: start;
   gap: 24px;
+  align-items: start;
+  margin-top: 12px;
 }
 
 .captured-side {
@@ -57,6 +79,34 @@ main {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.message-area {
+  position: fixed;
+  right: 120px;
+  bottom: 50px;
+
+  min-width: 250px;
+  min-height: 80px;
+
+  padding: 24px 32px;
+
+  border: 2px solid rgb(111, 131, 137);
+  border-radius: 15px;
+
+  background: white;
+
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message-area.hidden {
+  display: none;
 }
 
 .square {

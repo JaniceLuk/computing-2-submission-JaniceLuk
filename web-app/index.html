@@ -10,17 +10,22 @@
   <div id="game-over" class="game-over hidden"></div>
   
   <main>
+    <button id="reset">New game</button>
+    <div class="game-layout">
     <div id="captured-white" class="captured-side"></div>
-
+    
     <div id="board" class="board"></div>
 
     <div id="captured-black" class="captured-side"></div>
   </main>
 
   <p id="status" hidden></p>
-  <button id="reset" hidden>New game</button>
   <p id="captured" hidden></p>
   <ol id="history" hidden></ol>
+
+  <div id="message-area" class="message-area">
+  White goes first!
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>
