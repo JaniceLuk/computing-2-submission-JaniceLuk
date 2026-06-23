@@ -1,26 +1,52 @@
 /**
- * Chess game-state module for the Computing 2 coursework.
- * It represents the board, validates legal chess moves, applies moves,
+ * Simplified chess game-state module for the Computing 2 coursework.
+ * It represents the board, validates standard piece movement, applies moves,
  * tracks turns, captures, check, checkmate, stalemate and pawn promotion.
+ *
+ * This version does not implement castling or en passant.
+ *
  * @module chess
  */
 
 /** Chess board file letters from a to h. */
-export const FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+export const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
 /** Chess board rank numbers from 1 to 8. */
 export const RANKS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 /** White player identifier. */
-export const WHITE = 'white';
+export const WHITE = "white";
 
 /** Black player identifier. */
-export const BLACK = 'black';
+export const BLACK = "black";
 
-const PIECE_ORDER = ['rook', 'knight', 'bishop', 'queen', 'king', 'bishop', 'knight', 'rook'];
+const PIECE_ORDER = [
+  "rook",
+  "knight",
+  "bishop",
+  "queen",
+  "king",
+  "bishop",
+  "knight",
+  "rook",
+];
 const PIECE_SYMBOLS = {
-  white: { king: '♔', queen: '♕', rook: '♖', bishop: '♗', knight: '♘', pawn: '♙' },
-  black: { king: '♚', queen: '♛', rook: '♜', bishop: '♝', knight: '♞', pawn: '♟' },
+  white: {
+    king: "♔",
+    queen: "♕",
+    rook: "♖",
+    bishop: "♗",
+    knight: "♘",
+    pawn: "♙",
+  },
+  black: {
+    king: "♚",
+    queen: "♛",
+    rook: "♜",
+    bishop: "♝",
+    knight: "♞",
+    pawn: "♟",
+  },
 };
 
 /**
@@ -53,10 +79,10 @@ const PIECE_SYMBOLS = {
  * @property {string[]} history - List of moves played.
  */
 
-const clonePiece = piece => piece ? { ...piece } : null;
-const other = colour => colour === WHITE ? BLACK : WHITE;
-const fileIndex = square => FILES.indexOf(square[0]);
-const rankNumber = square => Number(square[1]);
+const clonePiece = (piece) => (piece ? { ...piece } : null);
+const other = (colour) => (colour === WHITE ? BLACK : WHITE);
+const fileIndex = (square) => FILES.indexOf(square[0]);
+const rankNumber = (square) => Number(square[1]);
 const squareName = (file, rank) => `${FILES[file]}${rank}`;
 
 /**
@@ -65,7 +91,7 @@ const squareName = (file, rank) => `${FILES[file]}${rank}`;
  * @returns {boolean}
  */
 export function isValidSquare(square) {
-  return typeof square === 'string' && /^[a-h][1-8]$/.test(square);
+  return typeof square === "string" && /^[a-h][1-8]$/.test(square);
 }
 
 /**
@@ -74,7 +100,7 @@ export function isValidSquare(square) {
  * @returns {string}
  */
 export function pieceSymbol(piece) {
-  return piece ? PIECE_SYMBOLS[piece.colour][piece.type] : '';
+  return piece ? PIECE_SYMBOLS[piece.colour][piece.type] : "";
 }
 
 /**
@@ -87,12 +113,28 @@ export function createGame() {
     for (const rank of RANKS) board[`${file}${rank}`] = null;
   }
   FILES.forEach((file, index) => {
-    board[`${file}1`] = { type: PIECE_ORDER[index], colour: WHITE, hasMoved: false };
-    board[`${file}2`] = { type: 'pawn', colour: WHITE, hasMoved: false };
-    board[`${file}7`] = { type: 'pawn', colour: BLACK, hasMoved: false };
-    board[`${file}8`] = { type: PIECE_ORDER[index], colour: BLACK, hasMoved: false };
+    board[`${file}1`] = {
+      type: PIECE_ORDER[index],
+      colour: WHITE,
+      hasMoved: false,
+    };
+    board[`${file}2`] = { type: "pawn", colour: WHITE, hasMoved: false };
+    board[`${file}7`] = { type: "pawn", colour: BLACK, hasMoved: false };
+    board[`${file}8`] = {
+      type: PIECE_ORDER[index],
+      colour: BLACK,
+      hasMoved: false,
+    };
   });
-  return { board, turn: WHITE, selected: null, captured: [], status: 'playing', winner: null, history: [] };
+  return {
+    board,
+    turn: WHITE,
+    selected: null,
+    captured: [],
+    status: "playing",
+    winner: null,
+    history: [],
+  };
 }
 
 /**
@@ -102,8 +144,14 @@ export function createGame() {
  */
 export function cloneGame(game) {
   const board = {};
-  for (const [square, piece] of Object.entries(game.board)) board[square] = clonePiece(piece);
-  return { ...game, board, captured: game.captured.map(clonePiece), history: [...game.history] };
+  for (const [square, piece] of Object.entries(game.board))
+    board[square] = clonePiece(piece);
+  return {
+    ...game,
+    board,
+    captured: game.captured.map(clonePiece),
+    history: [...game.history],
+  };
 }
 
 function pathIsClear(board, from, to) {
@@ -128,7 +176,7 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
   if (target && target.colour === piece.colour) return false;
 
   // Kings cannot be captured
-  if (target?.type === 'king') return false;
+  if (target?.type === "king") return false;
 
   const df = fileIndex(to) - fileIndex(from);
   const dr = rankNumber(to) - rankNumber(from);
@@ -137,20 +185,35 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
   const direction = piece.colour === WHITE ? 1 : -1;
 
   switch (piece.type) {
-    case 'pawn': {
+    case "pawn": {
       if (df === 0 && dr === direction && !target) return true;
       const startRank = piece.colour === WHITE ? 2 : 7;
-      if (df === 0 && dr === 2 * direction && rankNumber(from) === startRank && !target) {
-        return !board[squareName(fileIndex(from), rankNumber(from) + direction)];
+      if (
+        df === 0 &&
+        dr === 2 * direction &&
+        rankNumber(from) === startRank &&
+        !target
+      ) {
+        return !board[
+          squareName(fileIndex(from), rankNumber(from) + direction)
+        ];
       }
       return absF === 1 && dr === direction && Boolean(target);
     }
-    case 'knight': return (absF === 1 && absR === 2) || (absF === 2 && absR === 1);
-    case 'bishop': return absF === absR && pathIsClear(board, from, to);
-    case 'rook': return (df === 0 || dr === 0) && pathIsClear(board, from, to);
-    case 'queen': return (df === 0 || dr === 0 || absF === absR) && pathIsClear(board, from, to);
-    case 'king': return ignoreKingSafety ? absF <= 1 && absR <= 1 : absF <= 1 && absR <= 1;
-    default: return false;
+    case "knight":
+      return (absF === 1 && absR === 2) || (absF === 2 && absR === 1);
+    case "bishop":
+      return absF === absR && pathIsClear(board, from, to);
+    case "rook":
+      return (df === 0 || dr === 0) && pathIsClear(board, from, to);
+    case "queen":
+      return (
+        (df === 0 || dr === 0 || absF === absR) && pathIsClear(board, from, to)
+      );
+    case "king":
+      return ignoreKingSafety ? absF <= 1 && absR <= 1 : absF <= 1 && absR <= 1;
+    default:
+      return false;
   }
 }
 
@@ -173,7 +236,11 @@ export function squaresForColour(game, colour) {
  * @returns {string|null}
  */
 export function findKing(game, colour) {
-  return Object.entries(game.board).find(([, piece]) => piece?.type === 'king' && piece.colour === colour)?.[0] ?? null;
+  return (
+    Object.entries(game.board).find(
+      ([, piece]) => piece?.type === "king" && piece.colour === colour,
+    )?.[0] ?? null
+  );
 }
 
 /**
@@ -184,7 +251,9 @@ export function findKing(game, colour) {
  * @returns {boolean}
  */
 export function isSquareAttacked(game, square, byColour) {
-  return squaresForColour(game, byColour).some(from => canPieceReach(game.board, from, square, true));
+  return squaresForColour(game, byColour).some((from) =>
+    canPieceReach(game.board, from, square, true),
+  );
 }
 
 /**
@@ -198,13 +267,20 @@ export function isInCheck(game, colour) {
   return kingSquare ? isSquareAttacked(game, kingSquare, other(colour)) : false;
 }
 
-function applyMoveToBoard(game, from, to, promotion = 'queen') {
+function applyMoveToBoard(game, from, to, promotion = "queen") {
   const movingPiece = clonePiece(game.board[from]);
   const captured = clonePiece(game.board[to]);
   game.board[to] = { ...movingPiece, hasMoved: true };
   game.board[from] = null;
-  if (game.board[to].type === 'pawn' && (rankNumber(to) === 1 || rankNumber(to) === 8)) {
-    game.board[to].type = ['queen', 'rook', 'bishop', 'knight'].includes(promotion) ? promotion : 'queen';
+  if (
+    game.board[to].type === "pawn" &&
+    (rankNumber(to) === 1 || rankNumber(to) === 8)
+  ) {
+    game.board[to].type = ["queen", "rook", "bishop", "knight"].includes(
+      promotion,
+    )
+      ? promotion
+      : "queen";
   }
   return captured;
 }
@@ -218,12 +294,20 @@ function applyMoveToBoard(game, from, to, promotion = 'queen') {
 export function getLegalMoves(game, from) {
   if (!isValidSquare(from) || !game.board[from]) return [];
   const piece = game.board[from];
-  if (piece.colour !== game.turn || ['checkmate', 'stalemate', 'gameover'].includes(game.status)) return [];
-  return Object.keys(game.board).filter(to => {
+  if (
+    piece.colour !== game.turn ||
+    ["checkmate", "stalemate", "gameover"].includes(game.status)
+  )
+    return [];
+  return Object.keys(game.board).filter((to) => {
     if (!canPieceReach(game.board, from, to)) return false;
     const trial = cloneGame(game);
     applyMoveToBoard(trial, from, to);
-    if (piece.type === 'king' && isSquareAttacked(trial, to, other(piece.colour))) return false;
+    if (
+      piece.type === "king" &&
+      isSquareAttacked(trial, to, other(piece.colour))
+    )
+      return false;
     return !isInCheck(trial, piece.colour);
   });
 }
@@ -248,7 +332,9 @@ export function isLegalMove(game, from, to) {
 export function hasLegalMove(game, colour) {
   const oldTurn = game.turn;
   game.turn = colour;
-  const result = squaresForColour(game, colour).some(square => getLegalMoves(game, square).length > 0);
+  const result = squaresForColour(game, colour).some(
+    (square) => getLegalMoves(game, square).length > 0,
+  );
   game.turn = oldTurn;
   return result;
 }
@@ -262,19 +348,20 @@ export function hasLegalMove(game, colour) {
  * @returns {{ok: boolean, game: GameState, message: string}}
  */
 
-export function movePiece(game, from, to, promotion = 'queen') {
-  if (!isLegalMove(game, from, to)) return { ok: false, game, message: 'Illegal move.' };
+export function movePiece(game, from, to, promotion = "queen") {
+  if (!isLegalMove(game, from, to))
+    return { ok: false, game, message: "Illegal move." };
   const next = cloneGame(game);
   const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
   if (captured) next.captured.push(captured);
-  if (captured?.type === 'king') {
-  next.status = 'gameover';
-  next.winner = piece.colour;
-  next.selected = null;
-  next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
-  return { ok: true, game: next, message: 'Game over. King captured.' };
-}
+  if (captured?.type === "king") {
+    next.status = "gameover";
+    next.winner = piece.colour;
+    next.selected = null;
+    next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
+    return { ok: true, game: next, message: "Game over. King captured." };
+  }
   next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
   next.turn = other(next.turn);
   next.selected = null;
@@ -282,19 +369,18 @@ export function movePiece(game, from, to, promotion = 'queen') {
   const opponent = next.turn;
   if (!hasLegalMove(next, opponent)) {
     if (isInCheck(next, opponent)) {
-      next.status = 'checkmate';
+      next.status = "checkmate";
       next.winner = other(opponent);
     } else {
-      next.status = 'stalemate';
+      next.status = "stalemate";
     }
   } else if (isInCheck(next, opponent)) {
-    next.status = 'check';
+    next.status = "check";
   } else {
-    next.status = 'playing';
+    next.status = "playing";
   }
-  return { ok: true, game: next, message: 'Move played.' };
+  return { ok: true, game: next, message: "Move played." };
 }
-
 
 /**
  * Selects a square in the game state. Selecting an own piece returns its legal moves.
@@ -305,14 +391,17 @@ export function movePiece(game, from, to, promotion = 'queen') {
 export function selectSquare(game, square) {
   const next = cloneGame(game);
 
-  if (['checkmate', 'stalemate', 'gameover'].includes(next.status)) {
+  if (["checkmate", "stalemate", "gameover"].includes(next.status)) {
     next.selected = null;
     return { game: next, legalMoves: [] };
   }
 
   const piece = next.board[square];
   next.selected = piece?.colour === next.turn ? square : null;
-  return { game: next, legalMoves: next.selected ? getLegalMoves(next, next.selected) : [] };
+  return {
+    game: next,
+    legalMoves: next.selected ? getLegalMoves(next, next.selected) : [],
+  };
 }
 
 /**
