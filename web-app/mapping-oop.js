@@ -31,22 +31,22 @@ for (let i = 8; i > 0; i--) {
         // color
         // odd row ==> odd element
         if(!isRowEven && !isElementEven){
-            square.color = '#769656'
+            square.color = 'dark'
         }
 
         // even row ==> odd element
         if(!isRowEven && !isElementEven){
-            square.color = '#EEEED2'
+            square.color = 'light'
         }
 
         // odd row ==> even element
         if(!isRowEven && !isElementEven){
-            square.color = '#EEEED2'
+            square.color = 'light'
         }
 
         // even row ==> even element
         if(!isRowEven && !isElementEven){
-            square.color = '#769656'
+            square.color = 'dark'
         }
 
         // push array
@@ -55,5 +55,5 @@ for (let i = 8; i > 0; i--) {
     mainMap.push(rowArray);
 }
 
-import * as renderModule from './renderHTML.js';
+import * as silicon from './renderHTML.js';
 silicon.renderUI(mainMap);
