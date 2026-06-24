@@ -1,5 +1,5 @@
 /**
- * Simplified chess game-state module for the Computing 2 coursework.
+ * Simplified chess game-state module for Computing 2 coursework.
  * It represents the board, validates standard piece movement, applies moves,
  * tracks turns, captures, check, checkmate, stalemate and pawn promotion.
  *
