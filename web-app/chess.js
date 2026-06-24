@@ -74,7 +74,7 @@ const PIECE_SYMBOLS = {
  * @property {Colour} turn - The colour whose turn it is.
  * @property {string|null} selected - The currently selected square, or null.
  * @property {Piece[]} captured - Pieces captured so far.
- * @property {string} status - Current game status: playing, check, checkmate or stalemate.
+ * @property {string} status - Current game status: playing, check, checkmate, stalemate or gameover.
  * @property {Colour|null} winner - Winning colour, or null if there is no winner.
  * @property {string[]} history - List of moves played.
  */
@@ -175,8 +175,7 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
   const target = board[to];
   if (target && target.colour === piece.colour) return false;
 
-  // Kings cannot be captured
-  if (target?.type === "king") return false;
+  if (target?.type === 'king' && !ignoreKingSafety) return false;
 
   const df = fileIndex(to) - fileIndex(from);
   const dr = rankNumber(to) - rankNumber(from);
@@ -355,13 +354,6 @@ export function movePiece(game, from, to, promotion = "queen") {
   const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
   if (captured) next.captured.push(captured);
-  if (captured?.type === "king") {
-    next.status = "gameover";
-    next.winner = piece.colour;
-    next.selected = null;
-    next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
-    return { ok: true, game: next, message: "Game over. King captured." };
-  }
   next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
   next.turn = other(next.turn);
   next.selected = null;
