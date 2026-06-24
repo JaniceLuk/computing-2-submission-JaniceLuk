@@ -94,6 +94,18 @@ main {
   font-weight: bold;
   margin-bottom: var(--button-margin-bottom);
   padding: var(--button-padding-y) var(--button-padding-x);
+  transition: 0.2s;
+  position: relative;
+  z-index: 2000;
+}
+
+#reset:hover {
+  background: #12878d;
+  transform: translateY(1px);
+}
+
+#reset:active {
+  transform: translateY(1px);
 }
 
 .game-layout {
@@ -221,8 +233,11 @@ main {
   font-weight: bold;
   inset: 0;
   justify-content: center;
+  pointer-events: none;
   position: fixed;
   z-index: 1000;
+  white-space: pre-line;
+  text-align: center;
 }
 
 .hidden {

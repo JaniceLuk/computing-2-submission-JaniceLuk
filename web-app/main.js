@@ -90,7 +90,11 @@ function renderSidebar() {
     .join("");
   capturedElement.textContent = game.captured.map(pieceSymbol).join(" ");
   if (game.status === "checkmate" || game.status === "gameover") {
-    gameOverElement.textContent = `Game over. ${game.winner} wins!`;
+    const winner =
+      game.winner.charAt(0).toUpperCase() +
+      game.winner.slice(1);
+
+    gameOverElement.textContent = `Game Over\n${winner} Wins!`;
     gameOverElement.classList.remove("hidden");
   } else {
     gameOverElement.classList.add("hidden");
