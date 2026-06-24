@@ -10,7 +10,7 @@
   --hint: rgba(0, 0, 0, 0.18);
   --light-square: #F9F2E3;
   --message-border: rgb(111, 131, 137);
-  --message-text: rgb(99, 108, 110);
+  --message-text: #232323;
   --overlay: rgba(0, 0, 0, 0.55);
   --panel: #ffffff;
   --panel-shadow: rgba(0, 0, 0, 0.10);
@@ -36,7 +36,7 @@
   --message-bottom: 70px;
   --message-padding-x: 32px;
   --message-padding-y: 24px;
-  --message-right: 120px;
+  --message-right: -50px;
   --panel-padding: 1.25rem;
 
   /* Border radii */
@@ -60,10 +60,10 @@
   --check-outline: 5px;
   --history-max-height: 260px;
   --message-border-width: 2px;
-  --message-min-height: 80px;
-  --message-min-width: 250px;
+  --message-min-height: 180px;
+  --message-min-width: 600px;
   --side-panel-width: 280px;
-  --turn-indicator-min-width: 140px;
+  --turn-indicator-min-width: 145px;
 }
 
 * {
@@ -206,8 +206,7 @@ main {
 
 .message-area {
   align-items: center;
-  background: var(--white);
-  border: var(--message-border-width) solid var(--message-border);
+  background-color: transparent;
   border-radius: var(--message-radius);
   bottom: var(--message-bottom);
   color: var(--message-text);
@@ -221,6 +220,25 @@ main {
   position: fixed;
   right: var(--message-right);
   text-align: center;
+  flex-direction: column;
+  gap: 12px;
+  background-image: url("assets/Speech\ Bubble.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: none;
+}
+
+#message-text {
+  position: relative;
+  transform: translate(0px, -8px);
+}
+
+
+.message-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
 }
 
 .message-area.hidden {
@@ -304,7 +322,8 @@ main {
 #turn-indicator.turn-white {
   background: var(--white);
   color: var(--black-piece);
-  border-color: var(--whiteturn-border);
+  border: none;
+  box-shadow: inset 0 0 0 2px var(--whiteturn-border);
 }
 
 #turn-indicator.turn-black {
@@ -328,8 +347,34 @@ h2 {
 }
 
 @media (max-width: 850px) {
-  .app-shell {
-    align-items: center;
-    flex-direction: column;
+  .captured-side,
+  .message-area {
+    display: none;
   }
+
+  body {
+    align-items: center;
+    justify-content: center;
+  }
+
+  main {
+    align-items: center;
+    transform: none;
+  }
+
+  .game-layout {
+    display: flex;
+    justify-content: center;
+  }
+
+  .board {
+    height: min(90vw, var(--board-size));
+    width: min(90vw, var(--board-size));
+  }
+
+  .turn-row {
+    display: flex;
+    justify-content: center;
+  }
+}
 }

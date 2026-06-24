@@ -19,9 +19,10 @@ const resetButton = document.querySelector("#reset");
 const gameOverElement = document.querySelector("#game-over");
 const messageArea = document.getElementById("message-area");
 const turnIndicator = document.getElementById("turn-indicator");
+const messageText = document.getElementById("message-text");
 
 function showMessage(text) {
-  messageArea.textContent = text;
+  messageText.textContent = text;
   messageArea.classList.remove("hidden");
 }
 
@@ -103,7 +104,8 @@ function renderSidebar() {
   turnIndicator.textContent =
     game.turn === "white" ? "White" : "Black";
 
-  turnIndicator.classList.remove("turn-white", "turn-black");
+  turnIndicator.classList.remove("turn-white");
+  turnIndicator.classList.remove("turn-black");
 
   if (game.turn === "white") {
     turnIndicator.classList.add("turn-white");
