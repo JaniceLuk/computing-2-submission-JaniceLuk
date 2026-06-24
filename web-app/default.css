@@ -1,5 +1,7 @@
 :root {
   /* Colours */
+  --black-piece: #232323;
+  --whiteturn-border: rgb(111, 131, 137);
   --board-shadow: rgba(0, 0, 0, 0.14);
   --capture-hint: rgba(170, 0, 0, 0.35);
   --check-colour: rgba(255, 80, 80, 0.85);
@@ -30,8 +32,8 @@
   --history-padding-left: 1.2rem;
   --layout-gap: 24px;
   --layout-margin-top: 12px;
-  --main-offset: -40px;
-  --message-bottom: 50px;
+  --main-offset: 0px;
+  --message-bottom: 70px;
   --message-padding-x: 32px;
   --message-padding-y: 24px;
   --message-right: 120px;
@@ -40,7 +42,7 @@
   /* Border radii */
   --board-radius: 6px;
   --button-radius: 20px;
-  --message-radius: 15px;
+  --message-radius: 40px;
   --panel-radius: 10px;
   --reset-radius: 6px;
 
@@ -48,7 +50,7 @@
   --button-font-size: 18px;
   --captured-font-size: 1.7rem;
   --game-over-font-size: 3rem;
-  --message-font-size: 20px;
+  --message-font-size: 23px;
   --piece-font-fluid: 7vw;
   --piece-font-max: 3.7rem;
   --piece-font-min: 2rem;
@@ -61,6 +63,7 @@
   --message-min-height: 80px;
   --message-min-width: 250px;
   --side-panel-width: 280px;
+  --turn-indicator-min-width: 140px;
 }
 
 * {
@@ -275,6 +278,38 @@ main {
   cursor: pointer;
   font-weight: 700;
   padding: 0.7rem 1rem;
+}
+
+.turn-row {
+  display: grid;
+  grid-template-columns:
+    var(--captured-side-width)
+    var(--board-size)
+    var(--captured-side-width);
+  gap: var(--layout-gap);
+  margin-top: 24px;
+}
+
+#turn-indicator {
+  border: var(--message-border-width) solid var(--black-piece);
+  border-radius: var(--button-radius);
+  font-size: var(--button-font-size);
+  font-weight: bold;
+  justify-self: center;
+  min-width: var(--turn-indicator-min-width);
+  padding: var(--button-padding-y) var(--button-padding-x);
+  text-align: center;
+}
+
+#turn-indicator.turn-white {
+  background: var(--white);
+  color: var(--black-piece);
+  border-color: var(--whiteturn-border);
+}
+
+#turn-indicator.turn-black {
+  background: var(--black-piece);
+  color: var(--white);
 }
 
 h1,
