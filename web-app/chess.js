@@ -8,10 +8,10 @@
  * @module chess
  */
 
-/** Chess board file letters from a to h. */
+/** Chess board file (vertical columns) letters from a to h. */
 export const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
 
-/** Chess board rank numbers from 1 to 8. */
+/** Chess board rank (horizontal rows) numbers from 1 to 8. */
 export const RANKS = [1, 2, 3, 4, 5, 6, 7, 8];
 
 /** White player identifier. */
@@ -30,24 +30,6 @@ const PIECE_ORDER = [
   "knight",
   "rook",
 ];
-const PIECE_SYMBOLS = {
-  white: {
-    king: "♔",
-    queen: "♕",
-    rook: "♖",
-    bishop: "♗",
-    knight: "♘",
-    pawn: "♙",
-  },
-  black: {
-    king: "♚",
-    queen: "♛",
-    rook: "♜",
-    bishop: "♝",
-    knight: "♞",
-    pawn: "♟",
-  },
-};
 
 /**
  * A player colour.
@@ -92,15 +74,6 @@ const squareName = (file, rank) => `${FILES[file]}${rank}`;
  */
 export function isValidSquare(square) {
   return typeof square === "string" && /^[a-h][1-8]$/.test(square);
-}
-
-/**
- * Returns a display symbol for a chess piece.
- * @param {Piece|null} piece
- * @returns {string}
- */
-export function pieceSymbol(piece) {
-  return piece ? PIECE_SYMBOLS[piece.colour][piece.type] : "";
 }
 
 /**
@@ -155,19 +128,19 @@ export function cloneGame(game) {
 }
 
 function pathIsClear(board, from, to) {
-  const df = Math.sign(fileIndex(to) - fileIndex(from));
-  const dr = Math.sign(rankNumber(to) - rankNumber(from));
-  let file = fileIndex(from) + df;
-  let rank = rankNumber(from) + dr;
+  const fileChange = Math.sign(fileIndex(to) - fileIndex(from));
+  const rankChange = Math.sign(rankNumber(to) - rankNumber(from));
+  let file = fileIndex(from) + fileChange;
+  let rank = rankNumber(from) + rankChange;
   while (squareName(file, rank) !== to) {
     if (board[squareName(file, rank)]) return false;
-    file += df;
-    rank += dr;
+    file += fileChange;
+    rank += rankChange;
   }
   return true;
 }
 
-function canPieceReach(board, from, to, ignoreKingSafety = false) {
+function canPieceMoveTo(board, from, to, allowKingTarget = false) {
   if (!isValidSquare(from) || !isValidSquare(to) || from === to) return false;
   const piece = board[from];
   if (!piece) return false;
@@ -175,21 +148,21 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
   const target = board[to];
   if (target && target.colour === piece.colour) return false;
 
-  if (target?.type === 'king' && !ignoreKingSafety) return false;
+  if (target?.type === "king" && !allowKingTarget) return false;
 
-  const df = fileIndex(to) - fileIndex(from);
-  const dr = rankNumber(to) - rankNumber(from);
-  const absF = Math.abs(df);
-  const absR = Math.abs(dr);
+  const fileChange = fileIndex(to) - fileIndex(from);
+  const rankChange = rankNumber(to) - rankNumber(from);
+  const filesMoved = Math.abs(fileChange);
+  const ranksMoved = Math.abs(rankChange);
   const direction = piece.colour === WHITE ? 1 : -1;
 
   switch (piece.type) {
     case "pawn": {
-      if (df === 0 && dr === direction && !target) return true;
+      if (fileChange === 0 && rankChange === direction && !target) return true;
       const startRank = piece.colour === WHITE ? 2 : 7;
       if (
-        df === 0 &&
-        dr === 2 * direction &&
+        fileChange === 0 &&
+        rankChange === 2 * direction &&
         rankNumber(from) === startRank &&
         !target
       ) {
@@ -197,20 +170,20 @@ function canPieceReach(board, from, to, ignoreKingSafety = false) {
           squareName(fileIndex(from), rankNumber(from) + direction)
         ];
       }
-      return absF === 1 && dr === direction && Boolean(target);
+      return filesMoved === 1 && rankChange === direction && Boolean(target);
     }
     case "knight":
-      return (absF === 1 && absR === 2) || (absF === 2 && absR === 1);
+      return (filesMoved === 1 && ranksMoved === 2) || (filesMoved === 2 && ranksMoved === 1);
     case "bishop":
-      return absF === absR && pathIsClear(board, from, to);
+      return filesMoved === ranksMoved && pathIsClear(board, from, to);
     case "rook":
-      return (df === 0 || dr === 0) && pathIsClear(board, from, to);
+      return (fileChange === 0 || rankChange === 0) && pathIsClear(board, from, to);
     case "queen":
       return (
-        (df === 0 || dr === 0 || absF === absR) && pathIsClear(board, from, to)
+        (fileChange === 0 || rankChange === 0 || filesMoved === ranksMoved) && pathIsClear(board, from, to)
       );
     case "king":
-      return ignoreKingSafety ? absF <= 1 && absR <= 1 : absF <= 1 && absR <= 1;
+      return allowKingTarget ? filesMoved <= 1 && ranksMoved <= 1 : filesMoved <= 1 && ranksMoved <= 1;
     default:
       return false;
   }
@@ -251,7 +224,7 @@ export function findKing(game, colour) {
  */
 export function isSquareAttacked(game, square, byColour) {
   return squaresForColour(game, byColour).some((from) =>
-    canPieceReach(game.board, from, square, true),
+    canPieceMoveTo(game.board, from, square, true),
   );
 }
 
@@ -299,7 +272,7 @@ export function getLegalMoves(game, from) {
   )
     return [];
   return Object.keys(game.board).filter((to) => {
-    if (!canPieceReach(game.board, from, to)) return false;
+    if (!canPieceMoveTo(game.board, from, to)) return false;
     const trial = cloneGame(game);
     applyMoveToBoard(trial, from, to);
     if (
@@ -346,7 +319,6 @@ export function hasLegalMove(game, colour) {
  * @param {PieceType} [promotion='queen']
  * @returns {{ok: boolean, game: GameState, message: string}}
  */
-
 export function movePiece(game, from, to, promotion = "queen") {
   if (!isLegalMove(game, from, to))
     return { ok: false, game, message: "Illegal move." };
@@ -354,7 +326,7 @@ export function movePiece(game, from, to, promotion = "queen") {
   const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
   if (captured) next.captured.push(captured);
-  next.history.push(`${pieceSymbol(piece)} ${from}-${to}`);
+  next.history.push(`${from}-${to}`);
   next.turn = other(next.turn);
   next.selected = null;
 

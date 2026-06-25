@@ -5,7 +5,6 @@ import {
   isInCheck,
   isLegalMove,
   movePiece,
-  pieceSymbol,
 } from "../chess.js";
 
 function clearBoard(game) {
@@ -259,18 +258,5 @@ describe("Check, checkmate, stalemate and king safety", function () {
       false,
       "Whether black has any legal moves"
     );
-  });
-});
-
-describe("User interface helper functions", function () {
-  it("A white queen has a readable display symbol", function () {
-    const result = pieceSymbol({
-      type: "queen",
-      colour: "white",
-      hasMoved: false,
-    });
-    const expected = "♕";
-
-    checkEqual(result, expected, "The display symbol for a white queen");
   });
 });
