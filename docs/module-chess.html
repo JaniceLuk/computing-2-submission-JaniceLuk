@@ -29,7 +29,7 @@
 <nav >
     
     
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-chess.html">chess</a><ul class='members'><li data-type='member'><a href="module-chess.html#.BLACK">BLACK</a></li><li data-type='member'><a href="module-chess.html#.FILES">FILES</a></li><li data-type='member'><a href="module-chess.html#.RANKS">RANKS</a></li><li data-type='member'><a href="module-chess.html#.WHITE">WHITE</a></li></ul><ul class='methods'><li data-type='method'><a href="module-chess.html#.cloneGame">cloneGame</a></li><li data-type='method'><a href="module-chess.html#.createGame">createGame</a></li><li data-type='method'><a href="module-chess.html#.findKing">findKing</a></li><li data-type='method'><a href="module-chess.html#.getLegalMoves">getLegalMoves</a></li><li data-type='method'><a href="module-chess.html#.hasLegalMove">hasLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isInCheck">isInCheck</a></li><li data-type='method'><a href="module-chess.html#.isLegalMove">isLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isSquareAttacked">isSquareAttacked</a></li><li data-type='method'><a href="module-chess.html#.isValidSquare">isValidSquare</a></li><li data-type='method'><a href="module-chess.html#.movePiece">movePiece</a></li><li data-type='method'><a href="module-chess.html#.pieceSymbol">pieceSymbol</a></li><li data-type='method'><a href="module-chess.html#.resetGame">resetGame</a></li><li data-type='method'><a href="module-chess.html#.selectSquare">selectSquare</a></li><li data-type='method'><a href="module-chess.html#.squaresForColour">squaresForColour</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-chess.html">chess</a><ul class='members'><li data-type='member'><a href="module-chess.html#.BLACK">BLACK</a></li><li data-type='member'><a href="module-chess.html#.FILES">FILES</a></li><li data-type='member'><a href="module-chess.html#.RANKS">RANKS</a></li><li data-type='member'><a href="module-chess.html#.WHITE">WHITE</a></li></ul><ul class='methods'><li data-type='method'><a href="module-chess.html#.cloneGame">cloneGame</a></li><li data-type='method'><a href="module-chess.html#.createGame">createGame</a></li><li data-type='method'><a href="module-chess.html#.findKing">findKing</a></li><li data-type='method'><a href="module-chess.html#.getLegalMoves">getLegalMoves</a></li><li data-type='method'><a href="module-chess.html#.hasLegalMove">hasLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isInCheck">isInCheck</a></li><li data-type='method'><a href="module-chess.html#.isLegalMove">isLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isSquareAttacked">isSquareAttacked</a></li><li data-type='method'><a href="module-chess.html#.isValidSquare">isValidSquare</a></li><li data-type='method'><a href="module-chess.html#.movePiece">movePiece</a></li><li data-type='method'><a href="module-chess.html#.resetGame">resetGame</a></li><li data-type='method'><a href="module-chess.html#.selectSquare">selectSquare</a></li><li data-type='method'><a href="module-chess.html#.squaresForColour">squaresForColour</a></li></ul></li></ul>
     
 </nav>
 
@@ -58,9 +58,9 @@
         <div class="container-overview">
         
             
-                <div class="description usertext"><p>Simplified chess game-state module for the Computing 2 coursework.
+                <div class="description usertext"><p>Simplified chess game-state module for Computing 2 coursework.
 It represents the board, validates standard piece movement, applies moves,
-tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
+tracks turns, captures, check, checkmate, stalemate and pawn to queen promotion.</p>
 <p>This version does not implement castling or en passant.</p></div>
             
 
@@ -73,9 +73,9 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Simplified chess game-state module for the Computing 2 coursework.
+    <dd class="tag-description"><ul class="dummy"><li><p>Simplified chess game-state module for Computing 2 coursework.
 It represents the board, validates standard piece movement, applies moves,
-tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
+tracks turns, captures, check, checkmate, stalemate and pawn to queen promotion.</p>
 <p>This version does not implement castling or en passant.</p></li></ul></dd>
     
 
@@ -244,7 +244,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Chess board file letters from a to h.</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><p>Chess board file (vertical columns) letters from a to h.</p></li></ul></dd>
     
 
     
@@ -290,7 +290,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 
 
 <div class="description usertext">
-    <p>Chess board file letters from a to h.</p>
+    <p>Chess board file (vertical columns) letters from a to h.</p>
 </div>
 
 
@@ -311,7 +311,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Chess board rank numbers from 1 to 8.</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><p>Chess board rank (horizontal rows) numbers from 1 to 8.</p></li></ul></dd>
     
 
     
@@ -357,7 +357,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 
 
 <div class="description usertext">
-    <p>Chess board rank numbers from 1 to 8.</p>
+    <p>Chess board rank (horizontal rows) numbers from 1 to 8.</p>
 </div>
 
 
@@ -461,7 +461,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line145">line 145</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line121">line 121</a>
     </li></ul></dd>
     
 
@@ -615,7 +615,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line110">line 110</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -719,7 +719,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line237">line 237</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line240">line 240</a>
     </li></ul></dd>
     
 
@@ -900,7 +900,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line293">line 293</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line296">line 296</a>
     </li></ul></dd>
     
 
@@ -1078,7 +1078,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line331">line 331</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line334">line 334</a>
     </li></ul></dd>
     
 
@@ -1256,7 +1256,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line264">line 264</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line267">line 267</a>
     </li></ul></dd>
     
 
@@ -1434,7 +1434,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line321">line 321</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line324">line 324</a>
     </li></ul></dd>
     
 
@@ -1636,7 +1636,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line252">line 252</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line255">line 255</a>
     </li></ul></dd>
     
 
@@ -1838,7 +1838,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line93">line 93</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -1992,7 +1992,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line350">line 350</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line352">line 352</a>
     </li></ul></dd>
     
 
@@ -2258,163 +2258,6 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 
     
 
-    <h4 class="name" id=".pieceSymbol"><span class="type-signature type-signature-static">(static) </span>pieceSymbol<span class="signature">(piece)</span><span class="type-signature"> &rarr; {string}</span></h4>
-
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><p>Returns a display symbol for a chess piece.</p></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line102">line 102</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>piece</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Piece</span>
-|
-
-<span class="param-type">null</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5 class="h5-returns">Returns:</h5>
-
-        
-
-
-<dl class="param-type">
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-        
-            
-
-    
-
     <h4 class="name" id=".resetGame"><span class="type-signature type-signature-static">(static) </span>resetGame<span class="signature">()</span><span class="type-signature"> &rarr; {GameState}</span></h4>
 
     
@@ -2431,7 +2274,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line403">line 403</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line405">line 405</a>
     </li></ul></dd>
     
 
@@ -2535,7 +2378,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line383">line 383</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line385">line 385</a>
     </li></ul></dd>
     
 
@@ -2713,7 +2556,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line225">line 225</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line228">line 228</a>
     </li></ul></dd>
     
 
@@ -2893,7 +2736,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line52">line 52</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
@@ -2974,7 +2817,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line70">line 70</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line52">line 52</a>
     </li></ul></dd>
     
 
@@ -3255,7 +3098,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line62">line 62</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -3434,7 +3277,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line57">line 57</a>
+        <a href="chess.js.html">chess.js</a>, <a href="chess.js.html#line39">line 39</a>
     </li></ul></dd>
     
 
@@ -3528,7 +3371,7 @@ tracks turns, captures, check, checkmate, stalemate and pawn promotion.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Wed Jun 24 2026 10:25:16 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Jun 25 2026 11:31:26 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
