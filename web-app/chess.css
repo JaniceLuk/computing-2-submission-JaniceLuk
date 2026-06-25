@@ -7,13 +7,13 @@
   --check-colour: rgba(255, 80, 80, 0.85);
   --checkmate-colour: rgba(180, 0, 0, 0.95);
   --dark-square: #18A6AD;
-  --hint: rgba(0, 0, 0, 0.18);
+  --move-hint: rgba(0, 0, 0, 0.18);
   --light-square: #F9F2E3;
   --message-text: #232323;
-  --overlay: rgba(0, 0, 0, 0.55);
-  --selected: #547678;
+  --game-over-overlay: rgba(0, 0, 0, 0.55);
+  --selected-square: #547678;
   --white: white;
-  --whiteturn-border: rgb(111, 131, 137);
+  --white-turn-border: rgb(111, 131, 137);
 
   /* Board sizes */
   --board-size: 560px;
@@ -28,7 +28,7 @@
   --captured-gap: 8px;
   --layout-gap: 24px;
   --layout-margin-top: 12px;
-  --main-offset: -5px;
+  --game-layout-offset-y: -5px;
   --message-bottom: 70px;
   --message-gap: 12px;
   --message-padding-x: 32px;
@@ -91,7 +91,7 @@ main {
   align-items: center;
   display: flex;
   flex-direction: column;
-  transform: translateY(var(--main-offset));
+  transform: translateY(var(--game-layout-offset-y));
 }
 
 /* Main layout */
@@ -176,15 +176,15 @@ main {
 }
 
 .square.move-hint::after {
-  background: var(--hint);
+  background: var(--move-hint);
   border-radius: 50%;
   content: '';
   height: 30%;
   width: 30%;
 }
 
-.square.selected {
-  background: var(--selected);
+.square.selected-square {
+  background: var(--selected-square);
 }
 
 .piece {
@@ -261,7 +261,7 @@ main {
 /* Game over */
 .game-over {
   align-items: center;
-  background: var(--overlay);
+  background: var(--game-over-overlay);
   color: var(--white);
   display: flex;
   font-size: var(--game-over-font-size);
@@ -306,7 +306,7 @@ main {
 #turn-indicator.turn-white {
   background: var(--white);
   border: none;
-  box-shadow: inset 0 0 0 var(--button-border-width) var(--whiteturn-border);
+  box-shadow: inset 0 0 0 var(--button-border-width) var(--white-turn-border);
   color: var(--black-piece);
 }
 

@@ -127,7 +127,7 @@ export function cloneGame(game) {
   };
 }
 
-function pathIsClear(board, from, to) {
+function isMovePathClear(board, from, to) {
   const fileChange = Math.sign(fileIndex(to) - fileIndex(from));
   const rankChange = Math.sign(rankNumber(to) - rankNumber(from));
   let file = fileIndex(from) + fileChange;
@@ -158,7 +158,13 @@ function canPieceMoveTo(board, from, to, allowKingTarget = false) {
 
   switch (piece.type) {
     case "pawn": {
-      if (fileChange === 0 && rankChange === direction && !target) return true;
+      if (
+        fileChange === 0 &&
+        rankChange === direction &&
+        !target
+      ) {
+        return true;
+      }
       const startRank = piece.colour === WHITE ? 2 : 7;
       if (
         fileChange === 0 &&
@@ -170,20 +176,41 @@ function canPieceMoveTo(board, from, to, allowKingTarget = false) {
           squareName(fileIndex(from), rankNumber(from) + direction)
         ];
       }
-      return filesMoved === 1 && rankChange === direction && Boolean(target);
+      return (
+        filesMoved === 1 &&
+        rankChange === direction &&
+        Boolean(target)
+      );
     }
     case "knight":
-      return (filesMoved === 1 && ranksMoved === 2) || (filesMoved === 2 && ranksMoved === 1);
+      return (
+        (filesMoved === 1 && ranksMoved === 2) ||
+        (filesMoved === 2 && ranksMoved === 1)
+      );
     case "bishop":
-      return filesMoved === ranksMoved && pathIsClear(board, from, to);
+      return (
+        filesMoved === ranksMoved &&
+        isMovePathClear(board, from, to)
+      );
     case "rook":
-      return (fileChange === 0 || rankChange === 0) && pathIsClear(board, from, to);
+      return (
+        (
+          fileChange === 0 ||
+          rankChange === 0
+        ) &&
+        isMovePathClear(board, from, to)
+      );
     case "queen":
       return (
-        (fileChange === 0 || rankChange === 0 || filesMoved === ranksMoved) && pathIsClear(board, from, to)
+        (
+          fileChange === 0 ||
+          rankChange === 0 ||
+          filesMoved === ranksMoved
+        ) &&
+        isMovePathClear(board, from, to)
       );
     case "king":
-      return allowKingTarget ? filesMoved <= 1 && ranksMoved <= 1 : filesMoved <= 1 && ranksMoved <= 1;
+      return filesMoved <= 1 && ranksMoved <= 1;
     default:
       return false;
   }

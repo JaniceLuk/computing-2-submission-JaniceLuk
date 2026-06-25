@@ -10,14 +10,21 @@ import {
 
 const CHECKMATE_MESSAGE_DELAY = 700;
 
+// Board
 const boardElement = document.querySelector("#board");
-const gameOverElement = document.querySelector("#game-over");
-const historyElement = document.querySelector("#history");
+
+// Game controls
+const resetButton = document.querySelector("#reset");
+const turnIndicator = document.getElementById("turn-indicator");
+
+// Messages
 const messageArea = document.getElementById("message-area");
 const messageText = document.getElementById("message-text");
-const resetButton = document.querySelector("#reset");
+const gameOverElement = document.querySelector("#game-over");
+
+// Hidden game information (used internally)
 const statusElement = document.querySelector("#status");
-const turnIndicator = document.getElementById("turn-indicator");
+const historyElement = document.querySelector("#history");
 
 let game = createGame();
 let legalMoves = [];
@@ -42,6 +49,8 @@ function showCheckmateMessages() {
     showMessage("Checkmate!");
   }, CHECKMATE_MESSAGE_DELAY);
 }
+
+/* ---------- Rendering ---------- */
 
 function render() {
   renderBoard();
@@ -170,6 +179,8 @@ function renderCapturedPieces() {
     }
   });
 }
+
+/* ---------- User interaction ---------- */
 
 function handleSquareClick(square) {
   if (isGameFinished()) return;
