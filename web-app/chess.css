@@ -3,7 +3,7 @@
   --black-piece: #232323;
   --board-shadow: rgba(0, 0, 0, 0.14);
   --button-hover: #12878d;
-  --capture-hint: rgba(170, 0, 0, 0.35);
+  --capture-hint: rgba(194, 48, 48, 0.35);
   --check-colour: rgba(255, 80, 80, 0.85);
   --checkmate-colour: rgba(180, 0, 0, 0.95);
   --dark-square: #18A6AD;
@@ -11,7 +11,7 @@
   --light-square: #F9F2E3;
   --message-text: #232323;
   --game-over-overlay: rgba(0, 0, 0, 0.55);
-  --selected-square: #547678;
+  --selected-square: #18757a;
   --white: white;
   --white-turn-border: rgb(111, 131, 137);
 
