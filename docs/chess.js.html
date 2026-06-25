@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>chess.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-chess.html">chess</a><ul class='members'><li data-type='member'><a href="module-chess.html#.BLACK">BLACK</a></li><li data-type='member'><a href="module-chess.html#.FILES">FILES</a></li><li data-type='member'><a href="module-chess.html#.RANKS">RANKS</a></li><li data-type='member'><a href="module-chess.html#.WHITE">WHITE</a></li><li data-type='member'><a href="module-chess.html#~PAWN_START_RANK">PAWN_START_RANK</a></li><li data-type='member'><a href="module-chess.html#~PROMOTION_RANK">PROMOTION_RANK</a></li></ul><ul class='methods'><li data-type='method'><a href="module-chess.html#.cloneGame">cloneGame</a></li><li data-type='method'><a href="module-chess.html#.createGame">createGame</a></li><li data-type='method'><a href="module-chess.html#.findKing">findKing</a></li><li data-type='method'><a href="module-chess.html#.getLegalMoves">getLegalMoves</a></li><li data-type='method'><a href="module-chess.html#.hasLegalMove">hasLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isInCheck">isInCheck</a></li><li data-type='method'><a href="module-chess.html#.isLegalMove">isLegalMove</a></li><li data-type='method'><a href="module-chess.html#.isSquareAttacked">isSquareAttacked</a></li><li data-type='method'><a href="module-chess.html#.isValidSquare">isValidSquare</a></li><li data-type='method'><a href="module-chess.html#.movePiece">movePiece</a></li><li data-type='method'><a href="module-chess.html#.resetGame">resetGame</a></li><li data-type='method'><a href="module-chess.html#.selectSquare">selectSquare</a></li><li data-type='method'><a href="module-chess.html#.squaresForColour">squaresForColour</a></li></ul></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">chess.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Simplified chess game-state module for Computing 2 coursework.
+ * It represents the board, validates standard piece movement, applies moves,
+ * tracks turns, captures, check, checkmate, stalemate and pawn to queen promotion.
+ *
+ * This version does not implement castling or en passant.
+ *
+ * @module chess
+ */
+
+/** Chess board file (vertical columns) letters from a to h. */
+export const FILES = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+/** Chess board rank (horizontal rows) numbers from 1 to 8. */
+export const RANKS = [1, 2, 3, 4, 5, 6, 7, 8];
+
+/** White player identifier. */
+export const WHITE = "white";
+
+/** Black player identifier. */
+export const BLACK = "black";
+
+/** The rank each colour's pawns start on. */
+const PAWN_START_RANK = { [WHITE]: 2, [BLACK]: 7 };
+
+/** The rank each colour's pawns must reach to promote. */
+const PROMOTION_RANK = { [WHITE]: 8, [BLACK]: 1 };
+
+const PIECE_ORDER = [
+  "rook",
+  "knight",
+  "bishop",
+  "queen",
+  "king",
+  "bishop",
+  "knight",
+  "rook"
+];
+
+/**
+ * A player colour.
+ * @typedef {'white'|'black'} Colour
+ */
+
+/**
+ * A chess piece type.
+ * @typedef {'king'|'queen'|'rook'|'bishop'|'knight'|'pawn'} PieceType
+ */
+
+/**
+ * A chess piece on the board.
+ * @typedef {Object} Piece
+ * @property {PieceType} type - The type of chess piece.
+ * @property {Colour} colour - The colour that owns the piece.
+ * @property {boolean} hasMoved - Whether the piece has moved before.
+ */
+
+/**
+ * The complete state of a chess game.
+ * @typedef {Object} GameState
+ * @property {Object&lt;string, Piece|null>} board - Board squares mapped to pieces or null.
+ * @property {Colour} turn - The colour whose turn it is.
+ * @property {string|null} selected - The currently selected square, or null.
+ * @property {Piece[]} captured - Pieces captured so far.
+ * @property {string} status - Current game status: playing, check, checkmate, stalemate or gameover.
+ * @property {Colour|null} winner - Winning colour, or null if there is no winner.
+ * @property {string[]} history - List of moves played.
+ */
+
+const clonePiece = (piece) => (piece ? Object.assign({}, piece) : null);
+const other = (colour) => (colour === WHITE ? BLACK : WHITE);
+const fileIndex = (square) => FILES.indexOf(square[0]);
+const rankNumber = (square) => Number(square[1]);
+const squareName = (file, rank) => `${FILES[file]}${rank}`;
+
+/**
+ * Checks whether a square id such as `e4` is on the chess board.
+ * @param {string} square
+ * @returns {boolean}
+ */
+export function isValidSquare(square) {
+  return (
+    typeof square === "string" &amp;&amp;
+    (/^[a-h][1-8]$/).test(square)
+  );
+}
+
+/**
+ * Creates a new chess game in the standard starting position.
+ * @returns {GameState}
+ */
+export function createGame() {
+  const board = {};
+  for (const file of FILES) {
+    for (const rank of RANKS) board[`${file}${rank}`] = null;
+  }
+  FILES.forEach((file, index) => {
+    board[`${file}1`] = {
+      type: PIECE_ORDER[index],
+      colour: WHITE,
+      hasMoved: false,
+    };
+    board[`${file}2`] = { type: "pawn", colour: WHITE, hasMoved: false };
+    board[`${file}7`] = { type: "pawn", colour: BLACK, hasMoved: false };
+    board[`${file}8`] = {
+      type: PIECE_ORDER[index],
+      colour: BLACK,
+      hasMoved: false,
+    };
+  });
+  return {
+    board,
+    turn: WHITE,
+    selected: null,
+    captured: [],
+    status: "playing",
+    winner: null,
+    history: [],
+  };
+}
+
+/**
+ * Creates a deep copy of a game state.
+ * @param {GameState} game
+ * @returns {GameState}
+ */
+export function cloneGame(game) {
+  const board = {};
+  for (const [square, piece] of Object.entries(game.board))
+    board[square] = clonePiece(piece);
+  return {
+    ...game,
+    board,
+    captured: game.captured.map(clonePiece),
+    history: [...game.history],
+  };
+}
+
+function isMovePathClear(board, from, to) {
+  const fileChange = Math.sign(fileIndex(to) - fileIndex(from));
+  const rankChange = Math.sign(rankNumber(to) - rankNumber(from));
+  let file = fileIndex(from) + fileChange;
+  let rank = rankNumber(from) + rankChange;
+  while (squareName(file, rank) !== to) {
+    if (board[squareName(file, rank)]) return false;
+    file += fileChange;
+    rank += rankChange;
+  }
+  return true;
+}
+
+function canPieceMoveTo(board, from, to, allowKingTarget = false) {
+  if (!isValidSquare(from) || !isValidSquare(to) || from === to) return false;
+  const piece = board[from];
+  if (!piece) return false;
+
+  const target = board[to];
+  if (target &amp;&amp; target.colour === piece.colour) return false;
+
+  if (target?.type === "king" &amp;&amp; !allowKingTarget) return false;
+
+  const fileChange = fileIndex(to) - fileIndex(from);
+  const rankChange = rankNumber(to) - rankNumber(from);
+  const filesMoved = Math.abs(fileChange);
+  const ranksMoved = Math.abs(rankChange);
+  const direction = piece.colour === WHITE ? 1 : -1;
+
+  switch (piece.type) {
+    case "pawn": {
+      if (
+        fileChange === 0 &amp;&amp;
+        rankChange === direction &amp;&amp;
+        !target
+      ) {
+        return true;
+      }
+      const startRank = PAWN_START_RANK[piece.colour];
+      if (
+        fileChange === 0 &amp;&amp;
+        rankChange === 2 * direction &amp;&amp;
+        rankNumber(from) === startRank &amp;&amp;
+        !target
+      ) {
+        return !board[
+          squareName(fileIndex(from), rankNumber(from) + direction)
+        ];
+      }
+      return (
+        filesMoved === 1 &amp;&amp;
+        rankChange === direction &amp;&amp;
+        Boolean(target)
+      );
+    }
+    case "knight":
+      return (
+        (filesMoved === 1 &amp;&amp; ranksMoved === 2) ||
+        (filesMoved === 2 &amp;&amp; ranksMoved === 1)
+      );
+    case "bishop":
+      return (
+        filesMoved === ranksMoved &amp;&amp;
+        isMovePathClear(board, from, to)
+      );
+    case "rook":
+      return (
+        (
+          fileChange === 0 ||
+          rankChange === 0
+        ) &amp;&amp;
+        isMovePathClear(board, from, to)
+      );
+    case "queen":
+      return (
+        (
+          fileChange === 0 ||
+          rankChange === 0 ||
+          filesMoved === ranksMoved
+        ) &amp;&amp;
+        isMovePathClear(board, from, to)
+      );
+    case "king":
+      return filesMoved &lt;= 1 &amp;&amp; ranksMoved &lt;= 1;
+    default:
+      return false;
+  }
+}
+
+/**
+ * Finds all board squares containing pieces for the requested colour.
+ * @param {GameState} game
+ * @param {Colour} colour
+ * @returns {string[]}
+ */
+export function squaresForColour(game, colour) {
+  return Object.entries(game.board)
+    .filter(([, piece]) => piece?.colour === colour)
+    .map(([square]) => square);
+}
+
+/**
+ * Finds the square occupied by a colour's king.
+ * @param {GameState} game
+ * @param {Colour} colour
+ * @returns {string|null}
+ */
+export function findKing(game, colour) {
+  return (
+    Object.entries(game.board).find(
+      ([, piece]) => piece?.type === "king" &amp;&amp; piece.colour === colour,
+    )?.[0] ?? null
+  );
+}
+
+/**
+ * Checks whether a square is attacked by any piece of the requested colour.
+ * @param {GameState} game
+ * @param {string} square
+ * @param {Colour} byColour
+ * @returns {boolean}
+ */
+export function isSquareAttacked(game, square, byColour) {
+  return squaresForColour(game, byColour).some((from) =>
+    canPieceMoveTo(game.board, from, square, true),
+  );
+}
+
+/**
+ * Checks whether a colour's king is currently in check.
+ * @param {GameState} game
+ * @param {Colour} colour
+ * @returns {boolean}
+ */
+export function isInCheck(game, colour) {
+  const kingSquare = findKing(game, colour);
+  return kingSquare ? isSquareAttacked(game, kingSquare, other(colour)) : false;
+}
+
+function applyMoveToBoard(game, from, to, promotion = "queen") {
+  const movingPiece = clonePiece(game.board[from]);
+  const captured = clonePiece(game.board[to]);
+  game.board[to] = { ...movingPiece, hasMoved: true };
+  game.board[from] = null;
+  if (
+    game.board[to].type === "pawn" &amp;&amp;
+    rankNumber(to) === PROMOTION_RANK[game.board[to].colour]
+  ) {
+    game.board[to].type = ["queen", "rook", "bishop", "knight"].includes(
+      promotion,
+    )
+      ? promotion
+      : "queen";
+  }
+  return captured;
+}
+
+/**
+ * Returns legal destination squares for a piece at the chosen square.
+ * @param {GameState} game
+ * @param {string} from
+ * @returns {string[]}
+ */
+export function getLegalMoves(game, from) {
+  if (!isValidSquare(from) || !game.board[from]) return [];
+  const piece = game.board[from];
+  if (
+    piece.colour !== game.turn ||
+    ["checkmate", "stalemate", "gameover"].includes(game.status)
+  )
+    return [];
+  return Object.keys(game.board).filter((to) => {
+    if (!canPieceMoveTo(game.board, from, to)) return false;
+    const trial = cloneGame(game);
+    applyMoveToBoard(trial, from, to);
+    if (
+      piece.type === "king" &amp;&amp;
+      isSquareAttacked(trial, to, other(piece.colour))
+    )
+      return false;
+    return !isInCheck(trial, piece.colour);
+  });
+}
+
+/**
+ * Returns true if a move is legal in the current game state.
+ * @param {GameState} game
+ * @param {string} from
+ * @param {string} to
+ * @returns {boolean}
+ */
+export function isLegalMove(game, from, to) {
+  return getLegalMoves(game, from).includes(to);
+}
+
+/**
+ * Returns true if the requested colour has at least one legal move.
+ * @param {GameState} game
+ * @param {Colour} colour
+ * @returns {boolean}
+ */
+export function hasLegalMove(game, colour) {
+  const oldTurn = game.turn;
+  game.turn = colour;
+  const result = squaresForColour(game, colour).some(
+    (square) => getLegalMoves(game, square).length > 0,
+  );
+  game.turn = oldTurn;
+  return result;
+}
+
+/**
+ * Moves a piece if the move is legal and returns a new game state.
+ * @param {GameState} game
+ * @param {string} from
+ * @param {string} to
+ * @param {PieceType} [promotion='queen']
+ * @returns {{ok: boolean, game: GameState, message: string}}
+ */
+export function movePiece(game, from, to, promotion = "queen") {
+  if (!isLegalMove(game, from, to))
+    return { ok: false, game, message: "Illegal move." };
+  const next = cloneGame(game);
+  const captured = applyMoveToBoard(next, from, to, promotion);
+  if (captured) next.captured.push(captured);
+  next.history.push(`${from}-${to}`);
+  next.turn = other(next.turn);
+  next.selected = null;
+
+  const opponent = next.turn;
+  if (!hasLegalMove(next, opponent)) {
+    if (isInCheck(next, opponent)) {
+      next.status = "checkmate";
+      next.winner = other(opponent);
+    } else {
+      next.status = "stalemate";
+    }
+  } else if (isInCheck(next, opponent)) {
+    next.status = "check";
+  } else {
+    next.status = "playing";
+  }
+  return { ok: true, game: next, message: "Move played." };
+}
+
+/**
+ * Selects a square in the game state. Selecting an own piece returns its legal moves.
+ * @param {GameState} game
+ * @param {string} square
+ * @returns {{game: GameState, legalMoves: string[]}}
+ */
+export function selectSquare(game, square) {
+  const next = cloneGame(game);
+
+  if (["checkmate", "stalemate", "gameover"].includes(next.status)) {
+    next.selected = null;
+    return { game: next, legalMoves: [] };
+  }
+
+  const piece = next.board[square];
+  next.selected = piece?.colour === next.turn ? square : null;
+  return {
+    game: next,
+    legalMoves: next.selected ? getLegalMoves(next, next.selected) : [],
+  };
+}
+
+/**
+ * Resets a game state back to the standard starting position.
+ * @returns {GameState}
+ */
+export function resetGame() {
+  return createGame();
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Thu Jun 25 2026 12:14:41 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+    <link type="text/css" rel="stylesheet" href="custom.css">
+    
+</body>
+</html>
