@@ -2,7 +2,6 @@
 
 import {
   createGame,
-  getLegalMoves,
   isInCheck,
   movePiece,
   selectSquare

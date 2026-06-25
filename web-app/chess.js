@@ -20,6 +20,12 @@ export const WHITE = "white";
 /** Black player identifier. */
 export const BLACK = "black";
 
+/** The rank each colour's pawns start on. */
+const PAWN_START_RANK = { [WHITE]: 2, [BLACK]: 7 };
+
+/** The rank each colour's pawns must reach to promote. */
+const PROMOTION_RANK = { [WHITE]: 8, [BLACK]: 1 };
+
 const PIECE_ORDER = [
   "rook",
   "knight",
@@ -61,7 +67,7 @@ const PIECE_ORDER = [
  * @property {string[]} history - List of moves played.
  */
 
-const clonePiece = (piece) => (piece ? { ...piece } : null);
+const clonePiece = (piece) => (piece ? Object.assign({}, piece) : null);
 const other = (colour) => (colour === WHITE ? BLACK : WHITE);
 const fileIndex = (square) => FILES.indexOf(square[0]);
 const rankNumber = (square) => Number(square[1]);
@@ -168,7 +174,7 @@ function canPieceMoveTo(board, from, to, allowKingTarget = false) {
       ) {
         return true;
       }
-      const startRank = piece.colour === WHITE ? 2 : 7;
+      const startRank = PAWN_START_RANK[piece.colour];
       if (
         fileChange === 0 &&
         rankChange === 2 * direction &&
@@ -276,7 +282,7 @@ function applyMoveToBoard(game, from, to, promotion = "queen") {
   game.board[from] = null;
   if (
     game.board[to].type === "pawn" &&
-    (rankNumber(to) === 1 || rankNumber(to) === 8)
+    rankNumber(to) === PROMOTION_RANK[game.board[to].colour]
   ) {
     game.board[to].type = ["queen", "rook", "bishop", "knight"].includes(
       promotion,
@@ -353,7 +359,6 @@ export function movePiece(game, from, to, promotion = "queen") {
   if (!isLegalMove(game, from, to))
     return { ok: false, game, message: "Illegal move." };
   const next = cloneGame(game);
-  const piece = next.board[from];
   const captured = applyMoveToBoard(next, from, to, promotion);
   if (captured) next.captured.push(captured);
   next.history.push(`${from}-${to}`);

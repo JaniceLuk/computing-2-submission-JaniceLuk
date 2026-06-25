@@ -284,7 +284,7 @@ describe("Promoting pawns", function () {
   });
 });
 
-describe("Playing throuhg check and king safety", function () {
+describe("A move is illegal if it leaves the player's own king in check", function () {
   it("A real game sequence can lead to check", function () {
     // Given a real game sequence
     let game = createGame();
@@ -315,7 +315,7 @@ describe("Playing throuhg check and king safety", function () {
     );
   });
 
-  it("A player in check cannot ignore the check with an unrelated move", function () {
+  it("A move is illegal if the player's king is in check and the move does not resolve it", function () {
     // Given a position where the white king is in check from a black rook
     const game = createGame();
     clearBoard(game);
@@ -337,7 +337,7 @@ describe("Playing throuhg check and king safety", function () {
     );
   });
 
-  it("A pinned piece cannot move away if that exposes its own king", function () {
+  it("A move is illegal if moving that piece would expose the player's own king to check", function () {
     // Given a white rook shielding the white king from a black rook
     const game = createGame();
     clearBoard(game);
