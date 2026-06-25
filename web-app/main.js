@@ -79,7 +79,7 @@ function renderBoard() {
       );
 
       if (game.selected === square) {
-        cell.classList.add("selected");
+        cell.classList.add("selected-square");
       }
 
       if (
