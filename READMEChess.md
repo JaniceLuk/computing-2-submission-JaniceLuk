@@ -13,7 +13,7 @@ The application supports the standard rules of chess, including:
 * Check detection
 * Checkmate detection
 * Stalemate detection
-* Pawn promotion
+* Automatic pawn promotion to Queen
 * Display of captured pieces
 * Game reset
 * Responsive layout for smaller screens

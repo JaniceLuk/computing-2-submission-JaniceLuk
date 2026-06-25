@@ -5,7 +5,7 @@ import {
   getLegalMoves,
   isInCheck,
   movePiece,
-  selectSquare,
+  selectSquare
 } from "./chess.js";
 
 const CHECKMATE_MESSAGE_DELAY = 700;
@@ -45,7 +45,7 @@ function hideMessage() {
 function showCheckmateMessages() {
   showMessage("Nice");
 
-  setTimeout(() => {
+  setTimeout(function () {
     showMessage("Checkmate!");
   }, CHECKMATE_MESSAGE_DELAY);
 }
@@ -137,7 +137,8 @@ function renderGameOver() {
       game.winner.charAt(0).toUpperCase() +
       game.winner.slice(1);
 
-    gameOverElement.textContent = `Game Over\n${winner} Wins!`;
+    gameOverElement.textContent = `Game Over
+    ${winner} Wins!`;
     gameOverElement.classList.remove("hidden");
   } else {
     gameOverElement.classList.add("hidden");

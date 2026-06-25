@@ -431,6 +431,25 @@ describe("Ending a game by checkmate or stalemate", function () {
     checkEqual(result.message, "Illegal move.", "The message after checkmate");
   });
 
+  it("No further moves can be played after stalemate", function () {
+    // Given a known stalemate position
+    const game = createGame();
+    clearBoard(game);
+
+    game.board.h8 = { type: "king", colour: "black", hasMoved: false };
+    game.board.f7 = { type: "king", colour: "white", hasMoved: false };
+    game.board.g6 = { type: "queen", colour: "white", hasMoved: false };
+    game.turn = "black";
+    game.status = "stalemate";
+
+    // When Black tries to keep playing after stalemate
+    const result = movePiece(game, "h8", "h7");
+
+    // Then the move is rejected because the game is finished
+    checkEqual(result.ok, false, "Whether a move after stalemate is accepted");
+    checkEqual(result.message, "Illegal move.", "The message after stalemate");
+  });
+
   it("A stalemate position has no legal moves but the king is not in check", function () {
     // Given a known stalemate position
     const game = createGame();

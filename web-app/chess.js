@@ -1,7 +1,7 @@
 /**
  * Simplified chess game-state module for Computing 2 coursework.
  * It represents the board, validates standard piece movement, applies moves,
- * tracks turns, captures, check, checkmate, stalemate and pawn promotion.
+ * tracks turns, captures, check, checkmate, stalemate and pawn to queen promotion.
  *
  * This version does not implement castling or en passant.
  *
@@ -28,7 +28,7 @@ const PIECE_ORDER = [
   "king",
   "bishop",
   "knight",
-  "rook",
+  "rook"
 ];
 
 /**
@@ -73,7 +73,10 @@ const squareName = (file, rank) => `${FILES[file]}${rank}`;
  * @returns {boolean}
  */
 export function isValidSquare(square) {
-  return typeof square === "string" && /^[a-h][1-8]$/.test(square);
+  return (
+    typeof square === "string" &&
+    (/^[a-h][1-8]$/).test(square)
+  );
 }
 
 /**
